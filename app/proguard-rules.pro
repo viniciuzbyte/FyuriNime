@@ -1,0 +1,3 @@
+-keep class com.fyurinime.app.data.remote.dto.** { *; }
+-keepattributes *Annotation*
+-keep class kotlin.Metadata { *; }
