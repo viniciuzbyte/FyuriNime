@@ -53,6 +53,11 @@ class UserRepository @Inject constructor(
         userDao.update(current.copy(source = source))
     }
 
+    suspend fun updateUsername(username: String) {
+        val current = userDao.getUser() ?: return
+        userDao.update(current.copy(username = username))
+    }
+
     /** Call when a watch session ends. Grants XP, persists history, unlocks achievements. */
     suspend fun recordWatchSession(animeMalId: Int, animeTitle: String, minutesWatched: Int) {
         if (minutesWatched <= 0) return

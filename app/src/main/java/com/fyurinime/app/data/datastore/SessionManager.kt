@@ -22,12 +22,16 @@ class SessionManager @Inject constructor(
         val USERNAME = stringPreferencesKey("username")
         val EMAIL = stringPreferencesKey("email")
         val SOURCE = stringPreferencesKey("source")
+        val BIO = stringPreferencesKey("bio")
+        val AVATAR_PATH = stringPreferencesKey("avatar_path")
     }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data.map { it[Keys.IS_LOGGED_IN] ?: false }
     val hasOnboarded: Flow<Boolean> = context.dataStore.data.map { it[Keys.HAS_ONBOARDED] ?: false }
     val username: Flow<String?> = context.dataStore.data.map { it[Keys.USERNAME] }
     val source: Flow<String?> = context.dataStore.data.map { it[Keys.SOURCE] }
+    val bio: Flow<String?> = context.dataStore.data.map { it[Keys.BIO] }
+    val avatarPath: Flow<String?> = context.dataStore.data.map { it[Keys.AVATAR_PATH] }
 
     suspend fun login(username: String, email: String) {
         context.dataStore.edit {
@@ -41,6 +45,23 @@ class SessionManager @Inject constructor(
         context.dataStore.edit {
             it[Keys.HAS_ONBOARDED] = true
             it[Keys.SOURCE] = source
+        }
+    }
+
+    suspend fun updateProfile(username: String, bio: String) {
+        context.dataStore.edit {
+            it[Keys.USERNAME] = username
+            it[Keys.BIO] = bio
+        }
+    }
+
+    suspend fun setAvatarPath(path: String?) {
+        context.dataStore.edit {
+            if (path == null) {
+                it.remove(Keys.AVATAR_PATH)
+            } else {
+                it[Keys.AVATAR_PATH] = path
+            }
         }
     }
 
